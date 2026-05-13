@@ -145,6 +145,7 @@ cp .env.example .env  # If exists, otherwise create manually
 ```
 
 **Backend .env configuration:**
+
 ```env
 PORT=5000
 NODE_ENV=development
@@ -164,6 +165,7 @@ cp .env.example .env  # If exists, otherwise create manually
 ```
 
 **Frontend .env configuration:**
+
 ```env
 VITE_API_URL=http://localhost:5000
 ```
@@ -194,6 +196,7 @@ python train_model.py
 ### Backend Configuration
 
 Create `backend/.env`:
+
 ```env
 PORT=5000
 NODE_ENV=development
@@ -204,6 +207,7 @@ CORS_ORIGIN=http://localhost:5173
 ### Frontend Configuration
 
 Create `frontend/.env`:
+
 ```env
 VITE_API_URL=http://localhost:5000
 ```
@@ -263,6 +267,7 @@ Open your browser and navigate to: `http://localhost:5173`
 #### Prediction Routes (`/api/predict`)
 
 **POST** `/api/predict/income`
+
 - Predict income based on user features
 - Request body:
   ```json
@@ -284,6 +289,7 @@ Open your browser and navigate to: `http://localhost:5173`
 #### Analytics Routes (`/api/analytics`)
 
 **GET** `/api/analytics/dashboard`
+
 - Get dashboard statistics and metrics
 - Response:
   ```json
@@ -296,19 +302,21 @@ Open your browser and navigate to: `http://localhost:5173`
   ```
 
 **GET** `/api/analytics/quality`
+
 - Get data quality report
 - Response:
   ```json
   {
     "completeness": 0.98,
     "uniqueness": 0.95,
-    "validity": 0.90
+    "validity": 0.9
   }
   ```
 
 ### ML Service API
 
 **POST** `/predict`
+
 - ML model prediction endpoint
 - Requires preprocessed input data
 
@@ -363,6 +371,7 @@ Contributions are welcome! Please follow these guidelines:
    - `chore/task-name` for maintenance tasks
 
 2. **Commit Messages**: Follow conventional commits
+
    ```
    feat: add income prediction feature
    fix: resolve data validation issue
