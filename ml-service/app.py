@@ -4,61 +4,91 @@ from pydantic import BaseModel
 import pandas as pd
 import joblib
 
-# CREATE FASTAPI APP
+# =========================
+# FASTAPI APP
+# =========================
+
 app = FastAPI()
 
-# LOAD TRAINED MODEL
-model = joblib.load("model/income_model.pkl")
+# =========================
+# LOAD TRAINED PIPELINE
+# =========================
 
-# LOAD ENCODERS
-encoders = joblib.load("model/encoders.pkl")
+model = joblib.load(
+    "model/income_model.pkl"
+)
 
-target_encoder = joblib.load("model/target_encoder.pkl")
-
+# =========================
 # INPUT SCHEMA
+# =========================
+
 class PredictionInput(BaseModel):
 
     age: int
+
     education: str
+
     occupation: str
+
     hoursPerWeek: int
 
+    workclass: str
+
+    maritalStatus: str
+
+    sex: str
+
+# =========================
 # HOME ROUTE
+# =========================
+
 @app.get("/")
 def home():
 
     return {
-        "message": "ML API Running"
+        "message": "Advanced ML API Running"
     }
 
+# =========================
 # PREDICTION ROUTE
+# =========================
+
 @app.post("/predict")
 def predict(data: PredictionInput):
 
-    input_data = {
-        "age": [data.age],
-        "education_level": [data.education],
-        "occupation": [data.occupation],
-        "hours_per_week": [data.hoursPerWeek]
-    }
+    input_data = pd.DataFrame([{
 
-    df = pd.DataFrame(input_data)
+        "age": data.age,
 
-    # ENCODE CATEGORICAL VALUES
-    for column in ["education_level", "occupation"]:
+        "education_level": data.education,
 
-        if column in encoders:
+        "occupation": data.occupation,
 
-            encoder = encoders[column]
+        "hours_per_week": data.hoursPerWeek,
 
-            df[column] = encoder.transform(df[column])
+        "workclass": data.workclass,
 
-    # PREDICTION
-    prediction = model.predict(df)
+        "marital_status": data.maritalStatus,
 
-    # DECODE RESULT
-    final_prediction = target_encoder.inverse_transform(prediction)
+        "sex": data.sex,
+    }])
+
+    # PREDICT
+    prediction = model.predict(
+        input_data
+    )[0]
+
+    # PROBABILITY
+    probability = model.predict_proba(
+        input_data
+    )[0]
+
+    confidence = round(
+        max(probability) * 100,
+        2
+    )
 
     return {
-        "prediction": final_prediction[0]
+        "prediction": prediction,
+        "confidence": confidence
     }
